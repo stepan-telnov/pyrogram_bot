@@ -2,9 +2,26 @@ import asyncio
 from pyrogram import Client
 from settings import API_ID, API_HASH, ME
 
-async def main():
-    async with Client("my_account", API_ID, API_HASH) as app:
-        await app.send_message(ME, "аААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААА!")
+from pyrogram import Client, filters
 
 
-asyncio.run(main())
+app = Client('my_account', api_id=API_ID, api_hash=API_HASH)
+
+@app.on_message(filters.command("", prefixes=".") & filters.private)
+async def message_to_user(client, message):
+    if ME != message.from_user.id:
+        print(message)
+        print(message.text[2:])
+        if "hello" in message.text:
+            await message.reply_text("help")
+
+
+def main() -> None:
+    try:
+        app.run()
+    except Exception as err:
+        print(err)
+
+
+if __name__ == '__main__':
+    main()
